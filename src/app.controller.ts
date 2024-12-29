@@ -7,7 +7,6 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    // private readonly catsService: CatsService
   ) {}
 
   @Get('/')
@@ -18,9 +17,4 @@ export class AppController {
   ): string {
     return this.appService.getHello();
   }
-
-  // @Get('/app/cats')
-  // getAllCats() {
-  //   return this.catsService.getAllCats();
-  // }
 }

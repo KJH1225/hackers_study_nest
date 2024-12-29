@@ -1,20 +1,15 @@
 import { 
   Controller, 
   Get, 
-  Post, 
-  Put, 
-  Patch, 
-  Delete, 
-  // HttpException, 
-  // UseFilters, 
-  Param, 
-  ParseIntPipe, 
-  UseInterceptors 
+  Post,
+  UseInterceptors, 
+  Body
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
-// import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
-import { PositiveIntPipe } from 'src/common/pipes/positiveInt.pipe';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import { CatRequestDto } from './dto/catsRequestDto';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ReadOnlyCatDto } from './dto/catDto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -22,35 +17,48 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor'
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
-  @Get()
+  @Get('all')
+  @ApiOperation({ summary: '모든 고양이 정보 가져오기' })
   getAllCat() {
-    return this.catsService.getAllCats();
+    return this.catsService.getAllCat();
   }
 
-  @Get(':id')
-  getOneCat(@Param('id', ParseIntPipe, PositiveIntPipe) param: Number) {
-    console.log(this.constructor.name, param);
-    // return 'one cat';
-    return { cat: 'one cat' };
+  @Get()
+  @ApiOperation({ summary: '현재 고양이 정보 가져오기' })
+  getCurrentCat() {
+    return 'current cat';
   }
 
   @Post()
-  createCat() {
-    return 'create cat';
+  @ApiOperation({ summary: '회원가입' })
+  @ApiResponse({
+    status: 500,
+    description: '서버 에러',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '회원가입 완료',
+    type: ReadOnlyCatDto,
+  })
+  async signUp(@Body() body: CatRequestDto) {
+    return await this.catsService.signUp(body);
   }
 
-  @Put(':id')
-  updateCat() {
-    return 'update cat';
+  // @Post('login')
+  // @ApiOperation({ summary: '로그인' })
+  // async login(@Body() body: LoginRequestDto) {
+  //   return await this.catsService.login(body);
+  // }
+
+  @Post('logout')
+  @ApiOperation({ summary: '로그아웃' })
+  async logout() {
+    return await this.catsService.logout();
   }
 
-  @Patch(':id')
-  updatePartialCat() {
-    return 'update partial cat';
-  }
-
-  @Delete(':id')
-  deleteCat() {
-    return 'delete cat';
+  @Post('upload/cats')
+  @ApiOperation({ summary: '고양이 이미지 업로드' })
+  uploadCatImg() {
+    return 'uploadImg';
   }
 }
