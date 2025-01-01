@@ -8,6 +8,16 @@ import { CatRequestDto } from "./dto/catsRequestDto";
 export class CatsRepository {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
+  async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
+    const cat = await this.catModel.findById(catId).select('-password'); // 보안 문제로 password 제외하고 조회
+    return cat;
+  }
+
+  async findCatByEmail(email: string): Promise<Cat | null> {
+    const cat = await this.catModel.findOne({ email });
+    return cat;
+  }
+
   async existsByEmail(email: string): Promise<boolean> {
     // 스키마에서 validationError 처리하여 try catch 주석
     // try { 
