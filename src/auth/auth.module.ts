@@ -10,7 +10,7 @@ import { CatsModule } from 'src/cats/cats.module';
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     
     JwtModule.register({ // JWT 토큰 발급
-      secret: 'secret',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1y' },
     }),
 

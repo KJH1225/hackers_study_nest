@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) { // 인증에 사�
   constructor(private readonly catsRepository: CatsRepository) {
     super({ // jwt에 대한 설정
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'secret',
+      secretOrKey: process.env.JWT_SECRET,
       ignoreExpiration: false,
     });
   }
